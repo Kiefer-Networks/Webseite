@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiefer Networks &ndash; IT-Dienstleistungen &amp; Netzwerktechnik</title>
+    <meta name="description" content="Kiefer Networks &ndash; Ihr Partner für IT-Infrastruktur, Netzwerktechnik und professionelle IT-Lösungen in Neudrossenfeld und Umgebung.">
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    <style>
+        /* ---- LOCAL FONTS ---- */
+        @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('assets/fonts/inter-300.ttf') format('truetype'); }
+        @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/inter-400.ttf') format('truetype'); }
+        @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('assets/fonts/inter-500.ttf') format('truetype'); }
+        @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('assets/fonts/inter-600.ttf') format('truetype'); }
+        @font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap; src: url('assets/fonts/inter-700.ttf') format('truetype'); }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blue: #6699cc;
+            --blue-dark: #4a7fb5;
+            --blue-light: #8ab4de;
+            --gray: #bdbdbd;
+            --dark: #1a1a2e;
+            --darker: #12121f;
+            --text: #e0e0e0;
+            --text-muted: #9e9e9e;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--darker);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ---- I18N: hide inactive language ---- */
+        [data-lang-en] { display: none; }
+        html[lang="en"] [data-lang-de] { display: none; }
+        html[lang="en"] [data-lang-en] { display: revert; }
+
+        /* ---- NAV ---- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(18, 18, 31, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(102, 153, 204, 0.1);
+            transition: background 0.3s;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .nav-brand img { width: 40px; height: 40px; }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: var(--blue);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Language Switcher */
+        .lang-switch {
+            display: flex;
+            background: rgba(102, 153, 204, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(102, 153, 204, 0.15);
+        }
+
+        .lang-btn {
+            padding: 0.4rem 0.75rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        .lang-btn:hover:not(.active) { color: #fff; }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-toggle span {
+            width: 24px; height: 2px;
+            background: var(--text);
+            transition: 0.3s;
+        }
+
+        /* ---- HERO ---- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(102, 153, 204, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(102, 153, 204, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(102, 153, 204, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 153, 204, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-logo-full {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto 2rem;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(102, 153, 204, 0.4));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 1rem auto 2.5rem;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 20px rgba(102, 153, 204, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(102, 153, 204, 0.5);
+        }
+
+        .hero-cta svg { width: 18px; height: 18px; transition: transform 0.3s; }
+        .hero-cta:hover svg { transform: translateX(4px); }
+
+        /* ---- SECTIONS ---- */
+        section { padding: 6rem 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        .section-label {
+            display: inline-block;
+            color: var(--blue);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            max-width: 600px;
+            font-size: 1.05rem;
+            margin-bottom: 3rem;
+        }
+
+        /* ---- SERVICES ---- */
+        #leistungen { background: var(--dark); }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            padding: 2rem;
+            border-radius: 16px;
+            background: var(--darker);
+            border: 1px solid rgba(102, 153, 204, 0.1);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(102, 153, 204, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(102, 153, 204, 0.2), rgba(102, 153, 204, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            color: var(--blue);
+        }
+
+        .service-card h3 {
+            color: #fff;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ---- ABOUT ---- */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: var(--dark);
+            border: 1px solid rgba(102, 153, 204, 0.1);
+        }
+
+        .stat-number { font-size: 1.75rem; font-weight: 700; color: var(--blue); }
+        .stat-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .about-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-portrait {
+            width: 320px; height: 320px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 2px solid rgba(102, 153, 204, 0.25);
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .about-portrait::before {
+            content: '';
+            position: absolute; inset: -2px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--blue), transparent, var(--blue-dark));
+            opacity: 0.4; z-index: -1;
+            filter: blur(25px);
+        }
+
+        .about-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .about-name {
+            text-align: center;
+            margin-top: 1.25rem;
+        }
+
+        .about-name h3 {
+            color: #fff;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .about-name p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        /* ---- BRANCHEN / INDUSTRIES ---- */
+        #branchen { background: var(--dark); }
+
+        .branchen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .branche-card {
+            padding: 1.75rem;
+            border-radius: 16px;
+            background: var(--darker);
+            border: 1px solid rgba(102, 153, 204, 0.1);
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .branche-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(102, 153, 204, 0.3);
+        }
+
+        .branche-icon {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(102, 153, 204, 0.2), rgba(102, 153, 204, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--blue);
+        }
+
+        .branche-card h3 {
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .branche-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ---- CONTACT ---- */
+        #kontakt { background: var(--dark); }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .contact-item-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: rgba(102, 153, 204, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue);
+            flex-shrink: 0;
+        }
+
+        .contact-item h4 { color: #fff; font-size: 0.95rem; margin-bottom: 0.25rem; }
+
+        .contact-item p,
+        .contact-item a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-item a:hover { color: var(--blue); }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.875rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(102, 153, 204, 0.15);
+            background: var(--darker);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(102, 153, 204, 0.15);
+        }
+
+        .form-group textarea { resize: vertical; min-height: 120px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-submit {
+            padding: 0.875rem 2rem;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 153, 204, 0.3);
+        }
+
+        /* ---- FOOTER ---- */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(102, 153, 204, 0.1);
+        }
+
+        footer p { color: var(--text-muted); font-size: 0.85rem; }
+        footer a { color: var(--blue); text-decoration: none; }
+
+        /* ---- ANIMATIONS ---- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 768px) {
+            .nav-right {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 0.5rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%; left: 0; right: 0;
+                flex-direction: column;
+                background: rgba(18, 18, 31, 0.95);
+                backdrop-filter: blur(20px);
+                padding: 1.5rem 2rem;
+                gap: 1.25rem;
+                border-bottom: 1px solid rgba(102, 153, 204, 0.1);
+            }
+
+            .nav-links.open { display: flex; }
+            .nav-toggle { display: flex; }
+
+            .about-content { grid-template-columns: 1fr; gap: 2rem; }
+            .about-visual { order: -1; }
+            .about-portrait { width: 240px; height: 240px; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+            .branchen-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .branchen-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== NAV ==================== -->
+    <nav>
+        <a href="#" class="nav-brand">
+            <img src="assets/logo.svg" alt="Kiefer Networks Logo">
+            <span>Kiefer Networks</span>
+        </a>
+        <div class="nav-right">
+            <ul class="nav-links" id="navLinks">
+                <li>
+                    <a href="#leistungen" data-lang-de>Leistungen</a>
+                    <a href="#leistungen" data-lang-en>Services</a>
+                </li>
+                <li>
+                    <a href="#branchen" data-lang-de>Branchen</a>
+                    <a href="#branchen" data-lang-en>Industries</a>
+                </li>
+                <li>
+                    <a href="#ueber" data-lang-de>&Uuml;ber uns</a>
+                    <a href="#ueber" data-lang-en>About</a>
+                </li>
+                <li>
+                    <a href="#kontakt" data-lang-de>Kontakt</a>
+                    <a href="#kontakt" data-lang-en>Contact</a>
+                </li>
+            </ul>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-set-lang="de">DE</button>
+                <button class="lang-btn" data-set-lang="en">EN</button>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-content">
+            <img src="assets/logo-full.svg" alt="Kiefer Networks" class="hero-logo-full">
+            <p data-lang-de>IT-Infrastruktur, Netzwerktechnik und individuelle L&ouml;sungen &ndash; zuverl&auml;ssig, kompetent und aus einer Hand.</p>
+            <p data-lang-en>IT infrastructure, networking and tailored solutions &ndash; reliable, competent and from a single source.</p>
+            <a href="#kontakt" class="hero-cta">
+                <span data-lang-de>Kontakt aufnehmen</span>
+                <span data-lang-en>Get in touch</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- ==================== SERVICES ==================== -->
+    <section id="leistungen">
+        <div class="container">
+            <span class="section-label reveal" data-lang-de>Was wir bieten</span>
+            <span class="section-label reveal" data-lang-en>What we offer</span>
+            <h2 class="section-title reveal" data-lang-de>Unsere Leistungen</h2>
+            <h2 class="section-title reveal" data-lang-en>Our Services</h2>
+            <p class="section-desc reveal" data-lang-de>Von der Planung bis zur Umsetzung &ndash; wir begleiten kleine und mittelst&auml;ndische Unternehmen bei allen IT-Herausforderungen. Als Ihre externe IT-Abteilung sind wir immer f&uuml;r Sie da.</p>
+            <p class="section-desc reveal" data-lang-en>From planning to implementation &ndash; we support small and medium-sized businesses with all IT challenges. As your external IT department, we are always there for you.</p>
+
+            <div class="services-grid">
+                <!-- Card 1: Netzwerk -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5a17.92 17.92 0 01-8.716-2.247m0 0A8.966 8.966 0 013 12c0-1.264.26-2.466.727-3.559"/></svg>
+                    </div>
+                    <h3 data-lang-de>Netzwerkplanung &amp; -aufbau</h3>
+                    <h3 data-lang-en>Network Planning &amp; Setup</h3>
+                    <p data-lang-de>Professionelle Konzeption und Installation von kabelgebundenen und drahtlosen Netzwerken &ndash; skalierbar und sicher.</p>
+                    <p data-lang-en>Professional design and installation of wired and wireless networks &ndash; scalable and secure.</p>
+                </div>
+
+                <!-- Card 2: Plattformen -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z"/></svg>
+                    </div>
+                    <h3 data-lang-de>Linux, Windows &amp; macOS</h3>
+                    <h3 data-lang-en>Linux, Windows &amp; macOS</h3>
+                    <p data-lang-de>Plattform&uuml;bergreifender IT-Support und Administration &ndash; egal ob Linux-Server, Windows-Arbeitspl&auml;tze oder Mac-Umgebungen.</p>
+                    <p data-lang-en>Cross-platform IT support and administration &ndash; whether Linux servers, Windows workstations or Mac environments.</p>
+                </div>
+
+                <!-- Card 3: IT-Sicherheit -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    </div>
+                    <h3 data-lang-de>IT-Sicherheit &amp; Datenschutz</h3>
+                    <h3 data-lang-en>IT Security &amp; Privacy</h3>
+                    <p data-lang-de>Firewalls, VPN-L&ouml;sungen und Hochsicherheitskonzepte zum Schutz Ihrer sensiblen Daten. Besonderer Fokus auf Datenschutz und DSGVO-Konformit&auml;t.</p>
+                    <p data-lang-en>Firewalls, VPN solutions and high-security concepts to protect your sensitive data. Special focus on privacy and GDPR compliance.</p>
+                </div>
+
+                <!-- Card 4: MDM -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>
+                    </div>
+                    <h3 data-lang-de>Mobile Device Management</h3>
+                    <h3 data-lang-en>Mobile Device Management</h3>
+                    <p data-lang-de>Zentrale Verwaltung und Absicherung aller mobilen Endger&auml;te &ndash; Smartphones, Tablets und Laptops sicher im Griff.</p>
+                    <p data-lang-en>Central management and security for all mobile devices &ndash; smartphones, tablets and laptops under control.</p>
+                </div>
+
+                <!-- Card 5: Remote Work -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                    </div>
+                    <h3 data-lang-de>Remote-Arbeit &amp; Homeoffice</h3>
+                    <h3 data-lang-en>Remote Work &amp; Home Office</h3>
+                    <p data-lang-de>Sichere Remote-Arbeitspl&auml;tze, VPN-Zug&auml;nge und Collaboration-Tools &ndash; damit Ihr Team von &uuml;berall produktiv arbeiten kann.</p>
+                    <p data-lang-en>Secure remote workstations, VPN access and collaboration tools &ndash; so your team can work productively from anywhere.</p>
+                </div>
+
+                <!-- Card 6: Externe IT -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+                    </div>
+                    <h3 data-lang-de>Ihre externe IT-Abteilung</h3>
+                    <h3 data-lang-en>Your External IT Department</h3>
+                    <p data-lang-de>Kompletter IT-Betrieb f&uuml;r KMU und kleine Firmen &ndash; von der strategischen Beratung bis zum t&auml;glichen Support. Pers&ouml;nlich und zuverl&auml;ssig.</p>
+                    <p data-lang-en>Complete IT operations for SMBs and small companies &ndash; from strategic consulting to daily support. Personal and reliable.</p>
+                </div>
+
+                <!-- Card 7: Cloud -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/></svg>
+                    </div>
+                    <h3 data-lang-de>Cloud &amp; Hosting</h3>
+                    <h3 data-lang-en>Cloud &amp; Hosting</h3>
+                    <p data-lang-de>Migration, Einrichtung und Verwaltung von Cloud-Diensten und Servern &ndash; angepasst an Ihre Anforderungen.</p>
+                    <p data-lang-en>Migration, setup and management of cloud services and servers &ndash; tailored to your requirements.</p>
+                </div>
+
+                <!-- Card 8: Consulting -->
+                <div class="service-card reveal">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"/></svg>
+                    </div>
+                    <h3 data-lang-de>IT-Beratung &amp; Consulting</h3>
+                    <h3 data-lang-en>IT Consulting</h3>
+                    <p data-lang-de>Strategische IT-Beratung und ma&szlig;geschneiderte Konzepte &ndash; wir analysieren, optimieren und modernisieren Ihre IT-Landschaft.</p>
+                    <p data-lang-en>Strategic IT consulting and tailored concepts &ndash; we analyse, optimise and modernise your IT landscape.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== INDUSTRIES ==================== -->
+    <section id="branchen">
+        <div class="container">
+            <span class="section-label reveal" data-lang-de>Unsere Erfahrung</span>
+            <span class="section-label reveal" data-lang-en>Our Experience</span>
+            <h2 class="section-title reveal" data-lang-de>Branchen &amp; Zielgruppen</h2>
+            <h2 class="section-title reveal" data-lang-en>Industries &amp; Clients</h2>
+            <p class="section-desc reveal" data-lang-de>Wir kennen die spezifischen Anforderungen verschiedener Branchen und liefern L&ouml;sungen, die wirklich passen.</p>
+            <p class="section-desc reveal" data-lang-en>We understand the specific requirements of different industries and deliver solutions that truly fit.</p>
+
+            <div class="branchen-grid">
+                <div class="branche-card reveal">
+                    <div class="branche-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+                    </div>
+                    <h3 data-lang-de>&Auml;rzte &amp; Arztpraxen</h3>
+                    <h3 data-lang-en>Medical Practices</h3>
+                    <p data-lang-de>DSGVO-konforme IT, Praxissoftware-Support und sichere Patientendaten-Verwaltung.</p>
+                    <p data-lang-en>GDPR-compliant IT, practice software support and secure patient data management.</p>
+                </div>
+
+                <div class="branche-card reveal">
+                    <div class="branche-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3 0h.008v.008H18V7.5zm0 3h.008v.008H18v-.008zm0 3h.008v.008H18v-.008z"/></svg>
+                    </div>
+                    <h3 data-lang-de>KMU &amp; kleine Firmen</h3>
+                    <h3 data-lang-en>SMBs &amp; Small Businesses</h3>
+                    <p data-lang-de>Komplettl&ouml;sungen als Ihre externe IT-Abteilung &ndash; zuverl&auml;ssig und bezahlbar.</p>
+                    <p data-lang-en>Complete solutions as your external IT department &ndash; reliable and affordable.</p>
+                </div>
+
+                <div class="branche-card reveal">
+                    <div class="branche-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    </div>
+                    <h3 data-lang-de>Hochsicherheit &amp; Datenschutz</h3>
+                    <h3 data-lang-en>High Security &amp; Privacy</h3>
+                    <p data-lang-de>F&uuml;r Branchen mit h&ouml;chsten Sicherheitsanforderungen &ndash; verschl&uuml;sselt, gepr&uuml;ft, zuverl&auml;ssig.</p>
+                    <p data-lang-en>For industries with the highest security requirements &ndash; encrypted, audited, reliable.</p>
+                </div>
+
+                <div class="branche-card reveal">
+                    <div class="branche-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"/></svg>
+                    </div>
+                    <h3 data-lang-de>Freiberufler &amp; Selbstst&auml;ndige</h3>
+                    <h3 data-lang-en>Freelancers &amp; Self-Employed</h3>
+                    <p data-lang-de>Einfache und effiziente IT-L&ouml;sungen f&uuml;r Einzelunternehmer und kleine B&uuml;ros.</p>
+                    <p data-lang-en>Simple and efficient IT solutions for sole traders and small offices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT ==================== -->
+    <section id="ueber">
+        <div class="container">
+            <div class="about-content">
+                <div>
+                    <span class="section-label reveal" data-lang-de>Wer wir sind</span>
+                    <span class="section-label reveal" data-lang-en>Who we are</span>
+                    <h2 class="section-title reveal" data-lang-de>Ihr Partner f&uuml;r IT-L&ouml;sungen</h2>
+                    <h2 class="section-title reveal" data-lang-en>Your Partner for IT Solutions</h2>
+                    <p class="about-text reveal" data-lang-de>
+                        Kiefer Networks steht f&uuml;r zuverl&auml;ssige IT-Dienstleistungen mit pers&ouml;nlicher Betreuung aus Neudrossenfeld. Als Ihr Ansprechpartner f&uuml;r Netzwerktechnik und IT-Infrastruktur sorgen wir daf&uuml;r, dass Ihre Systeme reibungslos laufen &ndash; damit Sie sich auf Ihr Kerngesch&auml;ft konzentrieren k&ouml;nnen. Ob vor Ort oder remote &ndash; wir sind f&uuml;r Sie da.
+                    </p>
+                    <p class="about-text reveal" data-lang-en>
+                        Kiefer Networks stands for reliable IT services with personal support from Neudrossenfeld, Germany. As your contact for network technology and IT infrastructure, we ensure that your systems run smoothly &ndash; so you can focus on your core business. Whether on-site or remote &ndash; we are here for you.
+                    </p>
+                    <div class="about-stats reveal">
+                        <div class="stat">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label" data-lang-de>Erreichbarkeit</div>
+                            <div class="stat-label" data-lang-en>Availability</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label" data-lang-de>Kundenfokus</div>
+                            <div class="stat-label" data-lang-en>Client Focus</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">&lt;4h</div>
+                            <div class="stat-label" data-lang-de>Reaktionszeit</div>
+                            <div class="stat-label" data-lang-en>Response Time</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-lang-de>Vor Ort</div>
+                            <div class="stat-number" data-lang-en>On-Site</div>
+                            <div class="stat-label" data-lang-de>&amp; Remote</div>
+                            <div class="stat-label" data-lang-en>&amp; Remote</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual reveal">
+                    <div class="about-portrait">
+                        <img src="assets/portrait-web.jpg" alt="Inhaber Kiefer Networks">
+                    </div>
+                    <div class="about-name">
+                        <h3 data-lang-de>Ihr Ansprechpartner</h3>
+                        <h3 data-lang-en>Your Contact</h3>
+                        <p data-lang-de>Gesch&auml;ftsf&uuml;hrer &amp; IT-Berater</p>
+                        <p data-lang-en>Managing Director &amp; IT Consultant</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section id="kontakt">
+        <div class="container">
+            <span class="section-label reveal" data-lang-de>Schreiben Sie uns</span>
+            <span class="section-label reveal" data-lang-en>Write to us</span>
+            <h2 class="section-title reveal" data-lang-de>Kontakt</h2>
+            <h2 class="section-title reveal" data-lang-en>Contact</h2>
+            <p class="section-desc reveal" data-lang-de>Haben Sie Fragen oder ben&ouml;tigen ein Angebot? Wir melden uns schnellstm&ouml;glich bei Ihnen.</p>
+            <p class="section-desc reveal" data-lang-en>Have questions or need a quote? We will get back to you as soon as possible.</p>
+
+            <div class="contact-grid">
+                <div class="contact-info reveal">
+                    <div class="contact-item">
+                        <div class="contact-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                        </div>
+                        <div>
+                            <h4>E-Mail</h4>
+                            <a href="mailto:info@kiefer-networks.de">info@kiefer-networks.de</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                        </div>
+                        <div>
+                            <h4 data-lang-de>Telefon</h4>
+                            <h4 data-lang-en>Phone</h4>
+                            <a href="tel:+4915206482057">+49 1520 6482057</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                        </div>
+                        <div>
+                            <h4 data-lang-de>Standort</h4>
+                            <h4 data-lang-en>Location</h4>
+                            <p>Neudrossenfeld, Deutschland</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form reveal" onsubmit="event.preventDefault(); this.querySelector('.btn-submit').textContent = document.documentElement.lang === 'en' ? 'Thank you!' : 'Vielen Dank!'; setTimeout(function() { this.reset(); }.bind(this), 2000);">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-Mail</label>
+                            <input type="email" id="email" name="email" placeholder="ihre@email.de" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject" data-lang-de>Betreff</label>
+                        <label for="subject" data-lang-en>Subject</label>
+                        <input type="text" id="subject" name="subject" data-lang-de placeholder="Worum geht es?">
+                        <input type="text" id="subject-en" name="subject" data-lang-en placeholder="What is it about?">
+                    </div>
+                    <div class="form-group">
+                        <label for="message" data-lang-de>Nachricht</label>
+                        <label for="message" data-lang-en>Message</label>
+                        <textarea id="message" name="message" data-lang-de placeholder="Ihre Nachricht..." required></textarea>
+                        <textarea id="message-en" name="message" data-lang-en placeholder="Your message..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit" data-lang-de>Nachricht senden</button>
+                    <button type="submit" class="btn-submit" data-lang-en>Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <p data-lang-de>&copy; 2026 Kiefer Networks. Alle Rechte vorbehalten. | <a href="#">Impressum</a> | <a href="#">Datenschutz</a></p>
+        <p data-lang-en>&copy; 2026 Kiefer Networks. All rights reserved. | <a href="#">Legal Notice</a> | <a href="#">Privacy Policy</a></p>
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // Language switcher
+        document.querySelectorAll('[data-set-lang]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var lang = this.getAttribute('data-set-lang');
+                document.documentElement.lang = lang;
+                document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                try { localStorage.setItem('kn-lang', lang); } catch(e) {}
+            });
+        });
+
+        // Restore saved language
+        try {
+            var saved = localStorage.getItem('kn-lang');
+            if (saved === 'en') {
+                document.documentElement.lang = 'en';
+                document.querySelector('[data-set-lang="de"]').classList.remove('active');
+                document.querySelector('[data-set-lang="en"]').classList.add('active');
+            }
+        } catch(e) {}
+
+        // Mobile nav toggle
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                document.getElementById('navLinks').classList.remove('open');
+            });
+        });
+
+        // Scroll reveal
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+        // Nav background on scroll
+        window.addEventListener('scroll', function() {
+            document.querySelector('nav').style.background =
+                window.scrollY > 50 ? 'rgba(18, 18, 31, 0.95)' : 'rgba(18, 18, 31, 0.85)';
+        });
+    </script>
+</body>
+</html>
