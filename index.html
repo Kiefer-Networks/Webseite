@@ -540,6 +540,100 @@
         footer p { color: var(--text-muted); font-size: 0.85rem; }
         footer a { color: var(--blue); text-decoration: none; }
 
+        /* ---- MODAL / DIALOG ---- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            background: var(--dark);
+            border: 1px solid rgba(102, 153, 204, 0.15);
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: rgba(102, 153, 204, 0.1);
+            border: 1px solid rgba(102, 153, 204, 0.2);
+            color: var(--text);
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            z-index: 1;
+        }
+
+        .modal-close:hover { background: rgba(102, 153, 204, 0.25); }
+
+        .modal h2 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-right: 2.5rem;
+        }
+
+        .modal h3 {
+            color: var(--blue);
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-top: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal p, .modal li {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.75;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal ul {
+            list-style: disc;
+            padding-left: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .modal a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        .modal a:hover { text-decoration: underline; }
+
+        .modal-divider {
+            border: none;
+            border-top: 1px solid rgba(102, 153, 204, 0.1);
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .modal { padding: 1.5rem; max-height: 90vh; }
+        }
+
         /* ---- ANIMATIONS ---- */
         .reveal {
             opacity: 0;
@@ -923,9 +1017,136 @@
 
     <!-- ==================== FOOTER ==================== -->
     <footer>
-        <p data-lang-de>&copy; 2026 Kiefer Networks. Alle Rechte vorbehalten. | <a href="#">Impressum</a> | <a href="#">Datenschutz</a></p>
-        <p data-lang-en>&copy; 2026 Kiefer Networks. All rights reserved. | <a href="#">Legal Notice</a> | <a href="#">Privacy Policy</a></p>
+        <p data-lang-de>&copy; 2026 Kiefer Networks. Alle Rechte vorbehalten. | <a href="#" onclick="openModal('impressum'); return false;">Impressum</a> | <a href="#" onclick="openModal('datenschutz'); return false;">Datenschutz</a></p>
+        <p data-lang-en>&copy; 2026 Kiefer Networks. All rights reserved. | <a href="#" onclick="openModal('impressum'); return false;">Legal Notice</a> | <a href="#" onclick="openModal('datenschutz'); return false;">Privacy Policy</a></p>
     </footer>
+
+    <!-- ==================== MODALS ==================== -->
+    <div class="modal-overlay" id="modal-impressum">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('impressum')">&times;</button>
+
+            <!-- DE -->
+            <div data-lang-de>
+                <h2>Impressum</h2>
+                <h3>Angaben gem&auml;&szlig; &sect; 5 TMG</h3>
+                <p>Kiefer Networks<br>Malte Kiefer<br>Adalbert-Stifter-Str. 6<br>95512 Neudrossenfeld<br>Deutschland</p>
+                <h3>Kontakt</h3>
+                <p>Telefon: +49 (0) 1520 6482057<br>E-Mail: <a href="mailto:info@kiefer-networks.de">info@kiefer-networks.de</a></p>
+                <h3>Umsatzsteuer-Identifikationsnummer</h3>
+                <p>Umsatzsteuer-Identifikationsnummer gem&auml;&szlig; &sect; 27 a Umsatzsteuergesetz:<br>DE347517386</p>
+                <h3>Verantwortlich f&uuml;r den Inhalt nach &sect; 18 Abs. 2 MStV</h3>
+                <p>Malte Kiefer<br>Adalbert-Stifter-Str. 6<br>95512 Neudrossenfeld</p>
+                <hr class="modal-divider">
+                <h3>Streitschlichtung</h3>
+                <p>Die Europ&auml;ische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr</a><br>Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
+                <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+                <hr class="modal-divider">
+                <h3>Haftung f&uuml;r Inhalte</h3>
+                <p>Als Diensteanbieter sind wir gem&auml;&szlig; &sect; 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach &sect;&sect; 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, &uuml;bermittelte oder gespeicherte fremde Informationen zu &uuml;berwachen oder nach Umst&auml;nden zu forschen, die auf eine rechtswidrige T&auml;tigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unber&uuml;hrt. Eine diesbez&uuml;gliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung m&ouml;glich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+                <h3>Haftung f&uuml;r Links</h3>
+                <p>Unser Angebot enth&auml;lt Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb k&ouml;nnen wir f&uuml;r diese fremden Inhalte auch keine Gew&auml;hr &uuml;bernehmen. F&uuml;r die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf m&ouml;gliche Rechtsverst&ouml;&szlig;e &uuml;berpr&uuml;ft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+                <h3>Urheberrecht</h3>
+                <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielf&auml;ltigung, Bearbeitung, Verbreitung und jede Art der Verwertung au&szlig;erhalb der Grenzen des Urheberrechtes bed&uuml;rfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur f&uuml;r den privaten, nicht kommerziellen Gebrauch gestattet.</p>
+            </div>
+
+            <!-- EN -->
+            <div data-lang-en>
+                <h2>Legal Notice</h2>
+                <h3>Information pursuant to &sect; 5 TMG</h3>
+                <p>Kiefer Networks<br>Malte Kiefer<br>Adalbert-Stifter-Str. 6<br>95512 Neudrossenfeld<br>Germany</p>
+                <h3>Contact</h3>
+                <p>Phone: +49 (0) 1520 6482057<br>Email: <a href="mailto:info@kiefer-networks.de">info@kiefer-networks.de</a></p>
+                <h3>VAT ID</h3>
+                <p>VAT identification number pursuant to &sect; 27 a of the German VAT Act:<br>DE347517386</p>
+                <h3>Responsible for content pursuant to &sect; 18 (2) MStV</h3>
+                <p>Malte Kiefer<br>Adalbert-Stifter-Str. 6<br>95512 Neudrossenfeld</p>
+                <hr class="modal-divider">
+                <h3>Dispute Resolution</h3>
+                <p>The European Commission provides a platform for online dispute resolution (ODR): <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr</a><br>Our email address can be found above.</p>
+                <p>We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.</p>
+                <hr class="modal-divider">
+                <h3>Liability for Content</h3>
+                <p>As a service provider, we are responsible for our own content on these pages in accordance with general legislation pursuant to &sect; 7 (1) TMG. According to &sect;&sect; 8 to 10 TMG, however, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general law remain unaffected. However, liability in this regard is only possible from the time of knowledge of a specific infringement. Upon becoming aware of such violations, we will remove the content immediately.</p>
+                <h3>Liability for Links</h3>
+                <p>Our website contains links to external third-party websites over whose content we have no influence. Therefore, we cannot accept any liability for this external content. The respective provider or operator of the linked pages is always responsible for their content. The linked pages were checked for possible legal violations at the time of linking. Illegal content was not recognizable at the time of linking. Permanent content monitoring of the linked pages is not reasonable without concrete evidence of a legal violation. Upon becoming aware of legal violations, we will remove such links immediately.</p>
+                <h3>Copyright</h3>
+                <p>The content and works created by the site operators on these pages are subject to German copyright law. Duplication, processing, distribution, and any kind of exploitation beyond the limits of copyright law require the written consent of the respective author or creator. Downloads and copies of this site are only permitted for private, non-commercial use.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-datenschutz">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('datenschutz')">&times;</button>
+
+            <!-- DE -->
+            <div data-lang-de>
+                <h2>Datenschutzerkl&auml;rung</h2>
+                <p><em>Stand: M&auml;rz 2026</em></p>
+                <h3>1. Verantwortlicher</h3>
+                <p>Malte Kiefer<br>Kiefer Networks<br>Adalbert-Stifter-Str. 6<br>95512 Neudrossenfeld<br>E-Mail: <a href="mailto:info@kiefer-networks.de">info@kiefer-networks.de</a></p>
+                <h3>2. Grundsatz</h3>
+                <p>Der Schutz Ihrer personenbezogenen Daten ist mir ein besonderes Anliegen. Diese Datenschutzerkl&auml;rung informiert Sie dar&uuml;ber, welche Daten auf dieser Website erhoben werden und wie damit umgegangen wird.</p>
+                <h3>3. Hosting</h3>
+                <p>Diese Website wird auf einem eigenen Root-Server betrieben, der bei Netcup GmbH, Daimlerstra&szlig;e 25, 76185 Karlsruhe, gehostet wird. Der Server befindet sich in Deutschland.</p>
+                <p>Es werden keine Server-Logs gespeichert. Ihre IP-Adresse wird weder protokolliert noch gespeichert noch verarbeitet.</p>
+                <h3>4. Allgemeine Datenerhebung</h3>
+                <p>Beim Besuch dieser Website werden keinerlei personenbezogene Daten automatisch erhoben oder gespeichert. Es werden keine Cookies gesetzt, kein Tracking durchgef&uuml;hrt, keine Analyse-Tools eingesetzt und keine Daten an Dritte weitergegeben.</p>
+                <p>Es werden keine externen Ressourcen geladen. Alle Inhalte, Schriften und Medien werden ausschlie&szlig;lich vom eigenen Server ausgeliefert.</p>
+                <h3>5. Kontaktformular</h3>
+                <p>Wenn Sie das Kontaktformular auf dieser Website nutzen, werden die von Ihnen eingegebenen Daten (z.&nbsp;B. Name, E-Mail-Adresse, Nachricht) ausschlie&szlig;lich zum Zweck der Bearbeitung Ihrer Anfrage verarbeitet. Diese Daten werden nicht gespeichert, nicht weitergegeben und nach Abschluss der Kommunikation nicht weiter genutzt.</p>
+                <p>Rechtsgrundlage f&uuml;r die Verarbeitung ist Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung bzw. Erf&uuml;llung einer Anfrage).</p>
+                <h3>6. Ihre Rechte</h3>
+                <p>Sie haben gegen&uuml;ber mir folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
+                <ul>
+                    <li>Recht auf Auskunft (Art. 15 DSGVO)</li>
+                    <li>Recht auf Berichtigung (Art. 16 DSGVO)</li>
+                    <li>Recht auf L&ouml;schung (Art. 17 DSGVO)</li>
+                    <li>Recht auf Einschr&auml;nkung der Verarbeitung (Art. 18 DSGVO)</li>
+                    <li>Recht auf Daten&uuml;bertragbarkeit (Art. 20 DSGVO)</li>
+                    <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
+                </ul>
+                <p>Zur Aus&uuml;bung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:info@kiefer-networks.de">info@kiefer-networks.de</a></p>
+                <p>Sie haben au&szlig;erdem das Recht, sich bei einer Datenschutz-Aufsichtsbeh&ouml;rde zu beschweren. Die zust&auml;ndige Aufsichtsbeh&ouml;rde f&uuml;r Bayern ist das Bayerische Landesamt f&uuml;r Datenschutzaufsicht (BayLDA), Promenade 27, 91522 Ansbach.</p>
+                <h3>7. Aktualit&auml;t dieser Erkl&auml;rung</h3>
+                <p>Diese Datenschutzerkl&auml;rung ist aktuell g&uuml;ltig und hat den Stand M&auml;rz 2026. &Auml;nderungen der Website oder gesetzliche Vorgaben k&ouml;nnen eine Anpassung erforderlich machen.</p>
+            </div>
+
+            <!-- EN -->
+            <div data-lang-en>
+                <h2>Privacy Policy</h2>
+                <p><em>As of: March 2026</em></p>
+                <h3>1. Controller</h3>
+                <p>Malte Kiefer<br>Kiefer Networks<br>Adalbert-Stifter-Str. 6<br>95512 Neudrossenfeld<br>Email: <a href="mailto:info@kiefer-networks.de">info@kiefer-networks.de</a></p>
+                <h3>2. Principle</h3>
+                <p>The protection of your personal data is of particular concern to me. This privacy policy informs you about what data is collected on this website and how it is handled.</p>
+                <h3>3. Hosting</h3>
+                <p>This website is operated on a dedicated root server hosted by Netcup GmbH, Daimlerstra&szlig;e 25, 76185 Karlsruhe. The server is located in Germany.</p>
+                <p>No server logs are stored. Your IP address is neither logged, stored, nor processed.</p>
+                <h3>4. General Data Collection</h3>
+                <p>No personal data is automatically collected or stored when visiting this website. No cookies are set, no tracking is performed, no analytics tools are used, and no data is shared with third parties.</p>
+                <p>No external resources are loaded. All content, fonts, and media are served exclusively from our own server.</p>
+                <h3>5. Contact Form</h3>
+                <p>If you use the contact form on this website, the data you enter (e.g. name, email address, message) will be processed solely for the purpose of handling your enquiry. This data is not stored, not shared, and not used further after the communication is concluded.</p>
+                <p>The legal basis for processing is Art. 6(1)(b) GDPR (contract initiation or fulfilment of a request).</p>
+                <h3>6. Your Rights</h3>
+                <p>You have the following rights regarding your personal data:</p>
+                <ul>
+                    <li>Right of access (Art. 15 GDPR)</li>
+                    <li>Right to rectification (Art. 16 GDPR)</li>
+                    <li>Right to erasure (Art. 17 GDPR)</li>
+                    <li>Right to restriction of processing (Art. 18 GDPR)</li>
+                    <li>Right to data portability (Art. 20 GDPR)</li>
+                    <li>Right to object to processing (Art. 21 GDPR)</li>
+                </ul>
+                <p>To exercise your rights, please contact: <a href="mailto:info@kiefer-networks.de">info@kiefer-networks.de</a></p>
+                <p>You also have the right to lodge a complaint with a data protection supervisory authority. The competent authority for Bavaria is the Bavarian State Office for Data Protection Supervision (BayLDA), Promenade 27, 91522 Ansbach.</p>
+                <h3>7. Currency of this Policy</h3>
+                <p>This privacy policy is currently valid as of March 2026. Changes to the website or legal requirements may necessitate updates.</p>
+            </div>
+        </div>
+    </div>
 
     <!-- ==================== SCRIPTS ==================== -->
     <script>
@@ -974,6 +1195,33 @@
         window.addEventListener('scroll', function() {
             document.querySelector('nav').style.background =
                 window.scrollY > 50 ? 'rgba(18, 18, 31, 0.95)' : 'rgba(18, 18, 31, 0.85)';
+        });
+
+        // Modal open/close
+        function openModal(id) {
+            var el = document.getElementById('modal-' + id);
+            if (el) {
+                el.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(id) {
+            var el = document.getElementById('modal-' + id);
+            if (el) {
+                el.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            });
         });
     </script>
 </body>
