@@ -985,32 +985,10 @@
                     </div>
                 </div>
 
-                <form class="contact-form reveal" onsubmit="event.preventDefault(); this.querySelector('.btn-submit').textContent = document.documentElement.lang === 'en' ? 'Thank you!' : 'Vielen Dank!'; setTimeout(function() { this.reset(); }.bind(this), 2000);">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" name="name" placeholder="Name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">E-Mail</label>
-                            <input type="email" id="email" name="email" placeholder="ihre@email.de" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject" data-lang-de>Betreff</label>
-                        <label for="subject" data-lang-en>Subject</label>
-                        <input type="text" id="subject" name="subject" data-lang-de placeholder="Worum geht es?">
-                        <input type="text" id="subject-en" name="subject" data-lang-en placeholder="What is it about?">
-                    </div>
-                    <div class="form-group">
-                        <label for="message" data-lang-de>Nachricht</label>
-                        <label for="message" data-lang-en>Message</label>
-                        <textarea id="message" name="message" data-lang-de placeholder="Ihre Nachricht..." required></textarea>
-                        <textarea id="message-en" name="message" data-lang-en placeholder="Your message..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn-submit" data-lang-de>Nachricht senden</button>
-                    <button type="submit" class="btn-submit" data-lang-en>Send Message</button>
-                </form>
+                <div class="contact-form reveal" style="display: flex; align-items: center; justify-content: center;">
+                    <a href="mailto:info@kiefer-networks.de" class="btn-submit" data-lang-de style="display: inline-block; text-align: center;">E-Mail schreiben</a>
+                    <a href="mailto:info@kiefer-networks.de" class="btn-submit" data-lang-en style="display: inline-block; text-align: center;">Send Email</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1094,8 +1072,8 @@
                 <h3>4. Allgemeine Datenerhebung</h3>
                 <p>Beim Besuch dieser Website werden keinerlei personenbezogene Daten automatisch erhoben oder gespeichert. Es werden keine Cookies gesetzt, kein Tracking durchgef&uuml;hrt, keine Analyse-Tools eingesetzt und keine Daten an Dritte weitergegeben.</p>
                 <p>Es werden keine externen Ressourcen geladen. Alle Inhalte, Schriften und Medien werden ausschlie&szlig;lich vom eigenen Server ausgeliefert.</p>
-                <h3>5. Kontaktformular</h3>
-                <p>Wenn Sie das Kontaktformular auf dieser Website nutzen, werden die von Ihnen eingegebenen Daten (z.&nbsp;B. Name, E-Mail-Adresse, Nachricht) ausschlie&szlig;lich zum Zweck der Bearbeitung Ihrer Anfrage verarbeitet. Diese Daten werden nicht gespeichert, nicht weitergegeben und nach Abschluss der Kommunikation nicht weiter genutzt.</p>
+                <h3>5. Kontaktaufnahme</h3>
+                <p>Wenn Sie uns per E-Mail oder Telefon kontaktieren, werden Ihre Angaben ausschlie&szlig;lich zum Zweck der Bearbeitung Ihrer Anfrage verarbeitet. Diese Daten werden nicht weitergegeben und nach Abschluss der Kommunikation nicht weiter genutzt.</p>
                 <p>Rechtsgrundlage f&uuml;r die Verarbeitung ist Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung bzw. Erf&uuml;llung einer Anfrage).</p>
                 <h3>6. Ihre Rechte</h3>
                 <p>Sie haben gegen&uuml;ber mir folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
@@ -1127,8 +1105,8 @@
                 <h3>4. General Data Collection</h3>
                 <p>No personal data is automatically collected or stored when visiting this website. No cookies are set, no tracking is performed, no analytics tools are used, and no data is shared with third parties.</p>
                 <p>No external resources are loaded. All content, fonts, and media are served exclusively from our own server.</p>
-                <h3>5. Contact Form</h3>
-                <p>If you use the contact form on this website, the data you enter (e.g. name, email address, message) will be processed solely for the purpose of handling your enquiry. This data is not stored, not shared, and not used further after the communication is concluded.</p>
+                <h3>5. Contact</h3>
+                <p>If you contact us by email or phone, your details will be processed solely for the purpose of handling your enquiry. This data is not shared and not used further after the communication is concluded.</p>
                 <p>The legal basis for processing is Art. 6(1)(b) GDPR (contract initiation or fulfilment of a request).</p>
                 <h3>6. Your Rights</h3>
                 <p>You have the following rights regarding your personal data:</p>
