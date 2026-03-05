@@ -38,9 +38,8 @@
         }
 
         /* ---- I18N: hide inactive language ---- */
-        [data-lang-en] { display: none; }
-        html[lang="en"] [data-lang-de] { display: none; }
-        html[lang="en"] [data-lang-en] { display: revert; }
+        :lang(de) [data-lang-en] { display: none !important; }
+        :lang(en) [data-lang-de] { display: none !important; }
 
         /* ---- NAV ---- */
         nav {
