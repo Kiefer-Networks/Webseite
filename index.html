@@ -1017,14 +1017,14 @@
 
     <!-- ==================== FOOTER ==================== -->
     <footer>
-        <p data-lang-de>&copy; 2026 Kiefer Networks. Alle Rechte vorbehalten. | <a href="#" onclick="openModal('impressum'); return false;">Impressum</a> | <a href="#" onclick="openModal('datenschutz'); return false;">Datenschutz</a></p>
-        <p data-lang-en>&copy; 2026 Kiefer Networks. All rights reserved. | <a href="#" onclick="openModal('impressum'); return false;">Legal Notice</a> | <a href="#" onclick="openModal('datenschutz'); return false;">Privacy Policy</a></p>
+        <p data-lang-de>&copy; 2026 Kiefer Networks. Alle Rechte vorbehalten. | <a href="#" data-modal="impressum">Impressum</a> | <a href="#" data-modal="datenschutz">Datenschutz</a></p>
+        <p data-lang-en>&copy; 2026 Kiefer Networks. All rights reserved. | <a href="#" data-modal="impressum">Legal Notice</a> | <a href="#" data-modal="datenschutz">Privacy Policy</a></p>
     </footer>
 
     <!-- ==================== MODALS ==================== -->
     <div class="modal-overlay" id="modal-impressum">
         <div class="modal">
-            <button class="modal-close" onclick="closeModal('impressum')">&times;</button>
+            <button class="modal-close">&times;</button>
 
             <!-- DE -->
             <div data-lang-de>
@@ -1078,7 +1078,7 @@
 
     <div class="modal-overlay" id="modal-datenschutz">
         <div class="modal">
-            <button class="modal-close" onclick="closeModal('datenschutz')">&times;</button>
+            <button class="modal-close">&times;</button>
 
             <!-- DE -->
             <div data-lang-de>
@@ -1149,80 +1149,6 @@
     </div>
 
     <!-- ==================== SCRIPTS ==================== -->
-    <script>
-        // Language switcher
-        document.querySelectorAll('[data-set-lang]').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var lang = this.getAttribute('data-set-lang');
-                document.documentElement.lang = lang;
-                document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
-                this.classList.add('active');
-                try { localStorage.setItem('kn-lang', lang); } catch(e) {}
-            });
-        });
-
-        // Restore saved language
-        try {
-            var saved = localStorage.getItem('kn-lang');
-            if (saved === 'en') {
-                document.documentElement.lang = 'en';
-                document.querySelector('[data-set-lang="de"]').classList.remove('active');
-                document.querySelector('[data-set-lang="en"]').classList.add('active');
-            }
-        } catch(e) {}
-
-        // Mobile nav toggle
-        document.getElementById('navToggle').addEventListener('click', function() {
-            document.getElementById('navLinks').classList.toggle('open');
-        });
-
-        document.querySelectorAll('.nav-links a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                document.getElementById('navLinks').classList.remove('open');
-            });
-        });
-
-        // Scroll reveal
-        var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-        document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
-
-        // Nav background on scroll
-        window.addEventListener('scroll', function() {
-            document.querySelector('nav').style.background =
-                window.scrollY > 50 ? 'rgba(18, 18, 31, 0.95)' : 'rgba(18, 18, 31, 0.85)';
-        });
-
-        // Modal open/close
-        function openModal(id) {
-            var el = document.getElementById('modal-' + id);
-            if (el) {
-                el.classList.add('open');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeModal(id) {
-            var el = document.getElementById('modal-' + id);
-            if (el) {
-                el.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        }
-
-        // Close modal on overlay click
-        document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) {
-                    overlay.classList.remove('open');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
-    </script>
+    <script src="assets/main.js"></script>
 </body>
 </html>
