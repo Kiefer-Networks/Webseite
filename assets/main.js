@@ -68,6 +68,10 @@ document.querySelectorAll('dialog.modal').forEach(function(dialog) {
     dialog.querySelector('.modal-close').addEventListener('click', function() { dialog.close(); });
 });
 
+// Deep links such as index.html#modal-impressum (used by the scripts page footer) open the dialog
+var linkedDialog = document.getElementById(location.hash.slice(1));
+if (linkedDialog && linkedDialog.matches('dialog.modal')) linkedDialog.showModal();
+
 // Scroll reveal
 var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {

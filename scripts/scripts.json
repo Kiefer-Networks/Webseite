@@ -1,0 +1,51 @@
+{
+  "categories": [
+    { "id": "security", "name": "Security & Endpoint Protection" },
+    { "id": "deployment", "name": "Software Deployment" },
+    { "id": "maintenance", "name": "Maintenance & Cleanup" },
+    { "id": "monitoring", "name": "Monitoring & Health Checks" },
+    { "id": "networking", "name": "Networking" },
+    { "id": "identity", "name": "Identity & Microsoft 365" },
+    { "id": "backup", "name": "Backup & Recovery" },
+    { "id": "reporting", "name": "Inventory & Reporting" }
+  ],
+  "scripts": [
+    {
+      "id": "reinstall-eset",
+      "title": "Reinstall ESET (Security Product, Inspect Connector, Agent)",
+      "file": "security/Reinstall-Eset.ps1",
+      "category": "security",
+      "language": "PowerShell",
+      "platforms": ["Windows", "Windows Server"],
+      "rmm": ["NinjaOne", "Any RMM"],
+      "tags": ["eset", "eset-protect", "antivirus", "endpoint-protection", "reinstall", "migration", "uninstall", "msi", "ninjaone", "rmm"],
+      "updated": "2026-10-28",
+      "summary": "Removes the ESET security product, Inspect Connector and Management Agent in a safe order, then reinstalls everything with an ESET PROTECT installer.",
+      "details": [
+        "The security product is removed first. If that fails, nothing else is touched, so the device stays protected and managed. Without any ESET software installed, the script installs directly.",
+        "Each product is tried without a password first, then with every supplied password. Passwords can come from the -UninstallPassword parameter or from a NinjaOne custom field, and are masked in the log.",
+        "Handles a busy Windows Installer (1618), stale MSI transform references (1624) and repository download errors (5003/5009) with retries.",
+        "Writes a marker to the registry after a successful install, so later runs with the same installer are skipped unless -Force $true is set."
+      ],
+      "requirements": ["Run as administrator (SYSTEM via RMM)", "Windows PowerShell 5.1 or later", "ESET PROTECT all-in-one installer URL", "Outbound access to repository.eset.com"],
+      "parameters": [
+        { "name": "-Url", "description": "ESET PROTECT installer URL (https://redirector.eset.systems/li-handler/?uuid=...). Required. Use an installer that contains ESET Server Security for Windows Server." },
+        { "name": "-UninstallPassword", "description": "Uninstall passwords separated by \"|\"." },
+        { "name": "-PasswordFieldName", "description": "NinjaOne custom field with more passwords, one per line or separated by \"|\". Default: esetUninstallPassword." },
+        { "name": "-RemoveInspectConnector", "description": "Remove ESET Inspect Connector. Default: $true." },
+        { "name": "-RemoveAgent", "description": "Remove ESET Management Agent. Default: $true." },
+        { "name": "-ScheduleReboot", "description": "Schedule a reboot after -RebootDelaySec seconds if one is required. Default: $false." },
+        { "name": "-Force", "description": "Run again even if the marker for this installer exists. Default: $false." }
+      ],
+      "exitCodes": [
+        { "code": "0", "meaning": "Success or already done. Check the log for \"REBOOT REQUIRED\"." },
+        { "code": "1", "meaning": "Unexpected error" },
+        { "code": "2", "meaning": "Missing or invalid parameter" },
+        { "code": "10", "meaning": "Installer download failed" },
+        { "code": "20", "meaning": "Installation failed" },
+        { "code": "30", "meaning": "Uninstallation failed" }
+      ],
+      "example": ".\\Reinstall-Eset.ps1 -Url \"https://redirector.eset.systems/li-handler/?uuid=epi_win-...\" -UninstallPassword \"pw1|pw2\""
+    }
+  ]
+}

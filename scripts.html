@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- GitHub Pages cannot send response headers, so the policy has to live here -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <title>Script Library for MSPs &ndash; Kiefer Networks</title>
+    <meta name="description" content="Free PowerShell scripts for MSPs and IT administrators: endpoint security, deployment, maintenance and more. Searchable by category and tag.">
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    <link rel="stylesheet" href="assets/scripts.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="nav-brand">
+            <img src="assets/logo.svg" alt="Kiefer Networks Logo">
+            <span>Kiefer Networks</span>
+        </a>
+        <a href="index.html" class="nav-back">&larr; Back to website</a>
+    </nav>
+
+    <main>
+        <header class="page-head">
+            <span class="section-label">For MSPs &amp; IT admins</span>
+            <h1>Script Library</h1>
+            <p>Scripts I use in day-to-day MSP work, free to use in your own environment. Read every script before you run it and test it on a non-production device first. All scripts are licensed under the <a href="scripts/LICENSE">MIT License</a>.</p>
+        </header>
+
+        <noscript>
+            <p class="notice">The search and filters need JavaScript. You can browse all scripts on <a href="https://github.com/Kiefer-Networks/Webseite/tree/main/scripts">GitHub</a>.</p>
+        </noscript>
+
+        <div id="library" class="library">
+            <aside class="sidebar">
+                <h2>Categories</h2>
+                <ul id="categories" class="categories"></ul>
+            </aside>
+
+            <section class="results" aria-label="Scripts">
+                <div class="toolbar">
+                    <label for="search" class="sr-only">Search scripts</label>
+                    <input id="search" type="search" placeholder="Search title, tags or script content&hellip;" autocomplete="off">
+                </div>
+                <div id="tags" class="tags" aria-label="Filter by tag"></div>
+                <p id="count" class="count" aria-live="polite"></p>
+                <ul id="list" class="script-list"></ul>
+            </section>
+        </div>
+
+        <article id="detail" class="detail" hidden></article>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Kiefer Networks. Scripts: <a href="scripts/LICENSE">MIT License</a>, provided as is, without warranty. | <a href="index.html#modal-impressum">Legal Notice</a> | <a href="index.html#modal-datenschutz">Privacy Policy</a></p>
+    </footer>
+
+    <script src="assets/scripts.js"></script>
+</body>
+</html>
