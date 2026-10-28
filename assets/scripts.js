@@ -141,6 +141,12 @@ function table(rows, keyA, keyB) {
     }))]);
 }
 
+function highlighted(source, language) {
+    return el('code', {}, tokenize(source, language).map(function(t) {
+        return t.type ? el('span', { class: 'tok-' + t.type, text: t.text }) : document.createTextNode(t.text);
+    }));
+}
+
 function section(title, content) {
     return content ? [el('h3', { text: title }), content] : [];
 }
@@ -182,8 +188,8 @@ function renderDetail(s) {
         .concat(section('Requirements', s.requirements && el('ul', {}, s.requirements.map(function(d) { return el('li', { text: d }); }))))
         .concat(section('Parameters', s.parameters && table(s.parameters, 'name', 'description')))
         .concat(section('Exit codes', s.exitCodes && table(s.exitCodes, 'code', 'meaning')))
-        .concat(section('Example', s.example && el('pre', { class: 'example' }, [el('code', { text: s.example })])))
-        .concat(section('Source', el('pre', {}, [el('code', { text: s.source || 'Loading…' })])));
+        .concat(section('Example', s.example && el('pre', { class: 'example' }, [highlighted(s.example, s.language)])))
+        .concat(section('Source', el('pre', {}, [s.source ? highlighted(s.source, s.language) : el('code', { text: 'Loading…' })])));
 
     els.detail.replaceChildren.apply(els.detail, children);
     document.title = s.title + ' – Script Library – Kiefer Networks';

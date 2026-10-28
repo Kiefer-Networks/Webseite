@@ -225,6 +225,17 @@ pre {
     tab-size: 4;
 }
 
+/* Syntax colors, tuned for the dark code background */
+.tok-comment  { color: #6a7a8c; font-style: italic; }
+.tok-string   { color: #c3e88d; }
+.tok-variable { color: #8ab4de; }
+.tok-type     { color: #ffcb6b; }
+.tok-keyword  { color: #c792ea; }
+.tok-operator { color: #89ddff; }
+.tok-command  { color: #82aaff; }
+.tok-param    { color: #f78c6c; }
+.tok-number   { color: #f78c6c; }
+
 .example { max-height: none; white-space: pre-wrap; word-break: break-all; }
 
 /* ---- FOOTER ---- */
