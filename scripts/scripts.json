@@ -17,13 +17,13 @@
       "category": "security",
       "language": "PowerShell",
       "platforms": ["Windows", "Windows Server"],
-      "rmm": ["NinjaOne", "Any RMM"],
-      "tags": ["eset", "eset-protect", "antivirus", "endpoint-protection", "reinstall", "migration", "uninstall", "msi", "ninjaone", "rmm"],
+      "rmm": ["Any RMM"],
+      "tags": ["eset", "eset-protect", "antivirus", "endpoint-protection", "reinstall", "migration", "uninstall", "msi", "rmm"],
       "updated": "2026-10-28",
       "summary": "Removes the ESET security product, Inspect Connector and Management Agent in a safe order, then reinstalls everything with an ESET PROTECT installer.",
       "details": [
         "The security product is removed first. If that fails, nothing else is touched, so the device stays protected and managed. Without any ESET software installed, the script installs directly.",
-        "Each product is tried without a password first, then with every supplied password. Passwords can come from the -UninstallPassword parameter or from a NinjaOne custom field, and are masked in the log.",
+        "Each product is tried without a password first, then with every supplied password. Passwords come from the -UninstallPassword parameter and are masked in the log.",
         "Handles a busy Windows Installer (1618), stale MSI transform references (1624) and repository download errors (5003/5009) with retries.",
         "Downloads the installer into a private folder that only SYSTEM and Administrators can access, and only runs it with a valid ESET Authenticode signature.",
         "Every run removes and reinstalls ESET, so run it once per device and do not schedule it as a recurring task."
@@ -33,7 +33,6 @@
         { "name": "-Url", "description": "ESET PROTECT installer URL (https://redirector.eset.systems/li-handler/?uuid=...). Required. Use an installer that contains ESET Server Security for Windows Server." },
         { "name": "-UninstallPassword", "description": "Uninstall passwords separated by \"|\"." },
         { "name": "-LogPath", "description": "Folder for the MSI uninstall logs. Default: logs are deleted after use. When set, logs are masked in the private working folder and only then copied there; a new folder is created with access for SYSTEM and Administrators only." },
-        { "name": "-PasswordFieldName", "description": "NinjaOne custom field with more passwords, one per line or separated by \"|\". Default: esetUninstallPassword." },
         { "name": "-RemoveInspectConnector", "description": "Remove ESET Inspect Connector. Default: $true." },
         { "name": "-RemoveAgent", "description": "Remove ESET Management Agent. Default: $true." },
         { "name": "-ScheduleReboot", "description": "Schedule a reboot after -RebootDelaySec seconds if one is required. Default: $false." }

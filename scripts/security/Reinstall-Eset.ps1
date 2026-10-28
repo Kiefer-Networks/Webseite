@@ -29,8 +29,7 @@
     Use an installer containing ESET Server Security for Windows Server.
 
 .PARAMETER UninstallPassword
-    Uninstall passwords, separated by "|". Additional passwords are read from the NinjaOne
-    custom field named in -PasswordFieldName (one per line or separated by "|").
+    Uninstall passwords, separated by "|".
 
 .PARAMETER LogPath
     Folder for the MSI uninstall logs. Default: none, the logs are deleted after use.
@@ -56,7 +55,6 @@
 param(
     [string]$Url               = '',
     [string]$UninstallPassword = '',
-    [string]$PasswordFieldName = 'esetUninstallPassword',
     [string]$LogPath           = '',
     [string]$Arguments         = '--silent --accepteula',
     [int]$DownloadRetries      = 3,
@@ -101,25 +99,12 @@ function Hide-Secret {
 }
 
 function Get-PasswordList {
-    # Blank first, then parameter values, then NinjaOne custom field
+    # Blank first, then parameter values
     $list = New-Object System.Collections.Generic.List[string]
     $list.Add('')
 
     foreach ($pw in ($UninstallPassword -split '\|')) {
         if ($pw) { $list.Add($pw) }
-    }
-
-    if (Get-Command -Name 'Ninja-Property-Get' -ErrorAction SilentlyContinue) {
-        try {
-            $field = [string](Ninja-Property-Get $PasswordFieldName)
-            foreach ($pw in ($field -split "\r?\n|\|")) {
-                $pw = $pw.Trim()
-                if ($pw) { $list.Add($pw) }
-            }
-        }
-        catch {
-            Write-Host "[WARN] Could not read NinjaOne field '$PasswordFieldName': $($_.Exception.Message)"
-        }
     }
 
     $list | Select-Object -Unique
