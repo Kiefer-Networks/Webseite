@@ -34,8 +34,9 @@
 
 .PARAMETER LogPath
     Folder for the MSI uninstall logs. Default: none, the logs are deleted after use.
-    When set, the logs are kept there with all uninstall passwords masked. A folder that does
-    not exist yet is created with access for SYSTEM and Administrators only.
+    When set, the logs are masked in the private working folder first and then copied there,
+    so no password reaches -LogPath. A folder that does not exist yet is created with access
+    for SYSTEM and Administrators only.
 
 .EXAMPLE
     .\Reinstall-Eset.ps1 -Url "https://redirector.eset.systems/li-handler/?uuid=epi_win-..." -UninstallPassword "pw1|pw2"
@@ -130,18 +131,20 @@ function New-PrivateDirectory {
     New-Item -ItemType Directory -Path $Path -Force | Out-Null
     & icacls.exe $Path /inheritance:r /grant:r '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "icacls failed on '$Path' (exit code $LASTEXITCODE)" }
+    # Anything created before the lock-down could be owned (and later swapped) by a standard user
+    if (Get-ChildItem -LiteralPath $Path -Force) { throw "Folder '$Path' was not empty after locking it down" }
 }
 
 function Close-MsiLog {
-    # Kept logs are masked, because a verbose MSI log can contain the PASSWORD property
+    # The log is written in the private folder and masked there before a copy reaches -LogPath,
+    # because a verbose MSI log can contain the PASSWORD property
     param([string]$Path)
     if (-not (Test-Path $Path)) { return }
     if ($LogPath) {
         Set-Content -Path $Path -Value (Hide-Secret (Get-Content -Path $Path -Raw)) -Encoding Unicode
+        Copy-Item -LiteralPath $Path -Destination $LogPath -Force
     }
-    else {
-        Remove-Item $Path -Force -ErrorAction SilentlyContinue
-    }
+    Remove-Item $Path -Force -ErrorAction SilentlyContinue
 }
 
 function Test-EsetSignature {
@@ -224,8 +227,7 @@ function Remove-EsetProduct {
     param($Product)
 
     Write-Log "Uninstalling $($Product.Name) $($Product.Version) $($Product.Code)"
-    $logDir = if ($LogPath) { $LogPath } else { $WorkDir }
-    $msiLog = Join-Path $logDir ("eset_uninstall_{0}_{1}.log" -f ($Product.Code -replace '[{}]', ''), (Get-Date -Format 'yyyyMMdd_HHmmss'))
+    $msiLog = Join-Path $WorkDir ("eset_uninstall_{0}_{1}.log" -f ($Product.Code -replace '[{}]', ''), (Get-Date -Format 'yyyyMMdd_HHmmss'))
     $rc = -1
 
     foreach ($pw in $script:Passwords) {

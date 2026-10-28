@@ -32,7 +32,7 @@
       "parameters": [
         { "name": "-Url", "description": "ESET PROTECT installer URL (https://redirector.eset.systems/li-handler/?uuid=...). Required. Use an installer that contains ESET Server Security for Windows Server." },
         { "name": "-UninstallPassword", "description": "Uninstall passwords separated by \"|\"." },
-        { "name": "-LogPath", "description": "Folder for the MSI uninstall logs. Default: logs are deleted after use. When set, logs are kept with all passwords masked; a new folder is created with access for SYSTEM and Administrators only." },
+        { "name": "-LogPath", "description": "Folder for the MSI uninstall logs. Default: logs are deleted after use. When set, logs are masked in the private working folder and only then copied there; a new folder is created with access for SYSTEM and Administrators only." },
         { "name": "-PasswordFieldName", "description": "NinjaOne custom field with more passwords, one per line or separated by \"|\". Default: esetUninstallPassword." },
         { "name": "-RemoveInspectConnector", "description": "Remove ESET Inspect Connector. Default: $true." },
         { "name": "-RemoveAgent", "description": "Remove ESET Management Agent. Default: $true." },
