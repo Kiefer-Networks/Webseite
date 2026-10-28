@@ -22,8 +22,7 @@
                  transforms are kept) and retries.
       5003/5009  Installer could not download packages from repository.eset.com. Retries.
 
-    After a successful install a marker is written to HKLM:\SOFTWARE\IntellyTec\EsetMigration.
-    Later runs with the same installer are skipped unless -Force $true is set.
+    Every run removes and reinstalls ESET. Do not schedule it as a recurring task.
 
 .PARAMETER Url
     ESET PROTECT installer URL (https://redirector.eset.systems/li-handler/?uuid=...). Required.
@@ -33,15 +32,21 @@
     Uninstall passwords, separated by "|". Additional passwords are read from the NinjaOne
     custom field named in -PasswordFieldName (one per line or separated by "|").
 
+.PARAMETER LogPath
+    Folder for the MSI uninstall logs. Default: none, the logs are deleted after use.
+    When set, the logs are kept there with all uninstall passwords masked. A folder that does
+    not exist yet is created with access for SYSTEM and Administrators only.
+
 .EXAMPLE
     .\Reinstall-Eset.ps1 -Url "https://redirector.eset.systems/li-handler/?uuid=epi_win-..." -UninstallPassword "pw1|pw2"
 
 .NOTES
     Exit codes:
-      0   Success or already done. Check the log for "REBOOT REQUIRED".
+      0   Success. Check the log for "REBOOT REQUIRED".
       1   Unexpected error
       2   Missing or invalid parameter
       10  Installer download failed
+      11  Installer signature invalid or not signed by ESET
       20  Installation failed
       30  Uninstallation failed
 #>
@@ -51,7 +56,7 @@ param(
     [string]$Url               = '',
     [string]$UninstallPassword = '',
     [string]$PasswordFieldName = 'esetUninstallPassword',
-    [string]$InstallerPath     = (Join-Path $env:TEMP 'eset_install.exe'),
+    [string]$LogPath           = '',
     [string]$Arguments         = '--silent --accepteula',
     [int]$DownloadRetries      = 3,
     [int]$InstallRetries       = 5,
@@ -60,14 +65,17 @@ param(
     [bool]$RemoveInspectConnector = $true,
     [bool]$RemoveAgent         = $true,
     [bool]$ScheduleReboot      = $false,
-    [int]$RebootDelaySec       = 600,
-    [bool]$Force               = $false
+    [int]$RebootDelaySec       = 600
 )
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference    = 'SilentlyContinue'
 
-$MarkerKey = 'HKLM:\SOFTWARE\IntellyTec\EsetMigration'
+# Private working folder: a standard user must not be able to swap the installer
+# between download and start, or read MSI logs (C:\Windows\Temp is writable for users)
+$WorkDir       = Join-Path $env:ProgramData ('EsetReinstall_' + [guid]::NewGuid().ToString('N'))
+$InstallerPath = Join-Path $WorkDir 'eset_install.exe'
+
 $UninstallRoots = @(
     'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
     'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
@@ -114,6 +122,34 @@ function Get-PasswordList {
     }
 
     $list | Select-Object -Unique
+}
+
+function New-PrivateDirectory {
+    # Access for SYSTEM (S-1-5-18) and Administrators (S-1-5-32-544) only; SIDs work on any OS language
+    param([string]$Path)
+    New-Item -ItemType Directory -Path $Path -Force | Out-Null
+    & icacls.exe $Path /inheritance:r /grant:r '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "icacls failed on '$Path' (exit code $LASTEXITCODE)" }
+}
+
+function Close-MsiLog {
+    # Kept logs are masked, because a verbose MSI log can contain the PASSWORD property
+    param([string]$Path)
+    if (-not (Test-Path $Path)) { return }
+    if ($LogPath) {
+        Set-Content -Path $Path -Value (Hide-Secret (Get-Content -Path $Path -Raw)) -Encoding Unicode
+    }
+    else {
+        Remove-Item $Path -Force -ErrorAction SilentlyContinue
+    }
+}
+
+function Test-EsetSignature {
+    param([string]$Path)
+    $sig = Get-AuthenticodeSignature -FilePath $Path
+    $subject = if ($sig.SignerCertificate) { $sig.SignerCertificate.Subject } else { '' }
+    Write-Log "Installer signature: $($sig.Status) | $subject"
+    $sig.Status -eq 'Valid' -and $subject -match '\bO="?ESET\b'
 }
 
 function Get-InstallerId {
@@ -188,13 +224,14 @@ function Remove-EsetProduct {
     param($Product)
 
     Write-Log "Uninstalling $($Product.Name) $($Product.Version) $($Product.Code)"
-    $msiLog = Join-Path $env:TEMP ("eset_uninstall_{0}.log" -f ($Product.Code -replace '[{}]', ''))
+    $logDir = if ($LogPath) { $LogPath } else { $WorkDir }
+    $msiLog = Join-Path $logDir ("eset_uninstall_{0}_{1}.log" -f ($Product.Code -replace '[{}]', ''), (Get-Date -Format 'yyyyMMdd_HHmmss'))
     $rc = -1
 
     foreach ($pw in $script:Passwords) {
         $label   = if ($pw) { 'password ' + ([array]::IndexOf(@($script:Passwords), $pw)) } else { 'no password' }
         $msiArgs = "/x $($Product.Code) /qn /norestart /l*v `"$msiLog`""
-        if ($pw) { $msiArgs += " PASSWORD=`"$pw`"" }
+        if ($pw) { $msiArgs += " PASSWORD=`"$pw`" MsiHiddenProperties=PASSWORD" }
 
         $rc = Invoke-Msi $msiArgs
         if ($rc -eq 1624 -and (Repair-Transform $Product.Code)) {
@@ -202,8 +239,8 @@ function Remove-EsetProduct {
         }
 
         Write-Log "  $label -> $rc"
-        if ($rc -in 0, 1605) { Remove-Item $msiLog -Force -ErrorAction SilentlyContinue; return 'Ok' }
-        if ($rc -eq 3010)    { Remove-Item $msiLog -Force -ErrorAction SilentlyContinue; return 'Reboot' }
+        if ($rc -in 0, 1605) { Close-MsiLog $msiLog; return 'Ok' }
+        if ($rc -eq 3010)    { Close-MsiLog $msiLog; return 'Reboot' }
         if ($rc -in 1618, 1624) { break }
     }
 
@@ -216,7 +253,7 @@ function Remove-EsetProduct {
             Select-Object -First 8 |
             ForEach-Object { Write-Log "  MSI: $($_.Line.Trim())" 'ERROR' }
     }
-    Remove-Item $msiLog -Force -ErrorAction SilentlyContinue
+    Close-MsiLog $msiLog
     'Failed'
 }
 
@@ -268,15 +305,12 @@ try {
         exit 2
     }
 
+    New-PrivateDirectory $WorkDir
+    if ($LogPath -and -not (Test-Path $LogPath)) { New-PrivateDirectory $LogPath }
+
     $script:Passwords = @(Get-PasswordList)
     $installerId = Get-InstallerId $Url
     Write-Log "Installer: $installerId | Passwords to try: $($script:Passwords.Count) (incl. blank)"
-
-    $marker = Get-ItemProperty -Path $MarkerKey -ErrorAction SilentlyContinue
-    if ($marker -and $marker.InstallerId -eq $installerId -and -not $Force) {
-        Write-Log "Already done on $($marker.CompletedAt) with this installer. Nothing to do (use -Force `$true to rerun)."
-        exit 0
-    }
 
     # --- Uninstall, step by step ---
     $products = @(Get-EsetProducts)
@@ -330,14 +364,15 @@ try {
         exit 10
     }
 
+    if (-not (Test-EsetSignature $InstallerPath)) {
+        Write-Log 'Installer is not validly signed by ESET, not running it. The device has NO ESET protection.' 'ERROR'
+        exit 11
+    }
+
     $exitCode = Install-Eset
 
     switch ($exitCode) {
         { $_ -in 0, 3010 } {
-            if (-not (Test-Path $MarkerKey)) { New-Item -Path $MarkerKey -Force | Out-Null }
-            Set-ItemProperty -Path $MarkerKey -Name InstallerId -Value $installerId
-            Set-ItemProperty -Path $MarkerKey -Name CompletedAt -Value (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
-
             if ($rebootNeeded -or $exitCode -eq 3010) {
                 Write-Log 'Installation successful. REBOOT REQUIRED.' 'WARN'
                 if ($ScheduleReboot) {
@@ -380,5 +415,5 @@ catch {
     exit 1
 }
 finally {
-    Remove-Item $InstallerPath -Force -ErrorAction SilentlyContinue
+    Remove-Item $WorkDir -Recurse -Force -ErrorAction SilentlyContinue
 }

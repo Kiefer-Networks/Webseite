@@ -25,23 +25,25 @@
         "The security product is removed first. If that fails, nothing else is touched, so the device stays protected and managed. Without any ESET software installed, the script installs directly.",
         "Each product is tried without a password first, then with every supplied password. Passwords can come from the -UninstallPassword parameter or from a NinjaOne custom field, and are masked in the log.",
         "Handles a busy Windows Installer (1618), stale MSI transform references (1624) and repository download errors (5003/5009) with retries.",
-        "Writes a marker to the registry after a successful install, so later runs with the same installer are skipped unless -Force $true is set."
+        "Downloads the installer into a private folder that only SYSTEM and Administrators can access, and only runs it with a valid ESET Authenticode signature.",
+        "Every run removes and reinstalls ESET, so run it once per device and do not schedule it as a recurring task."
       ],
       "requirements": ["Run as administrator (SYSTEM via RMM)", "Windows PowerShell 5.1 or later", "ESET PROTECT all-in-one installer URL", "Outbound access to repository.eset.com"],
       "parameters": [
         { "name": "-Url", "description": "ESET PROTECT installer URL (https://redirector.eset.systems/li-handler/?uuid=...). Required. Use an installer that contains ESET Server Security for Windows Server." },
         { "name": "-UninstallPassword", "description": "Uninstall passwords separated by \"|\"." },
+        { "name": "-LogPath", "description": "Folder for the MSI uninstall logs. Default: logs are deleted after use. When set, logs are kept with all passwords masked; a new folder is created with access for SYSTEM and Administrators only." },
         { "name": "-PasswordFieldName", "description": "NinjaOne custom field with more passwords, one per line or separated by \"|\". Default: esetUninstallPassword." },
         { "name": "-RemoveInspectConnector", "description": "Remove ESET Inspect Connector. Default: $true." },
         { "name": "-RemoveAgent", "description": "Remove ESET Management Agent. Default: $true." },
-        { "name": "-ScheduleReboot", "description": "Schedule a reboot after -RebootDelaySec seconds if one is required. Default: $false." },
-        { "name": "-Force", "description": "Run again even if the marker for this installer exists. Default: $false." }
+        { "name": "-ScheduleReboot", "description": "Schedule a reboot after -RebootDelaySec seconds if one is required. Default: $false." }
       ],
       "exitCodes": [
-        { "code": "0", "meaning": "Success or already done. Check the log for \"REBOOT REQUIRED\"." },
+        { "code": "0", "meaning": "Success. Check the log for \"REBOOT REQUIRED\"." },
         { "code": "1", "meaning": "Unexpected error" },
         { "code": "2", "meaning": "Missing or invalid parameter" },
         { "code": "10", "meaning": "Installer download failed" },
+        { "code": "11", "meaning": "Installer signature invalid or not signed by ESET" },
         { "code": "20", "meaning": "Installation failed" },
         { "code": "30", "meaning": "Uninstallation failed" }
       ],
